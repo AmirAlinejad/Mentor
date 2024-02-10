@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c6e8cf2b-e2a7-4863-b24e-9b398026bb0d"
+      }
+    },
+    "owner": "amiralinejad"
   }
 }
