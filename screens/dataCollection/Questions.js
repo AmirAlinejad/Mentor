@@ -109,7 +109,7 @@ const Questions = ({ navigation }) => {
       } else {
         // Handle the end of questions
         Alert.alert("Completed", "You have answered all questions.");
-        navigation.navigate('HomeScren'); // Navigate to the home screen
+        navigation.navigate('HomeScreen'); // Navigate to the home screen
       }
     });
   };
