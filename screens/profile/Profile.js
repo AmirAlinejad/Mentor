@@ -3,13 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import { getUserData, getUserID } from '../../functions/functions';
 import Header from '../../components/Header';
 import CustomText from '../../components/CustomText';
-import { Chip } from 'react-native-paper';
 
 const fakeUserData = {
   userName: 'John Doe',
   age: 25,
   ethnicity: 'Asian',
   description: 'I am a software engineer',
+  interests: ['Art', 'Music', 'Sports'],
 };
 
 const Profile = ({navigation}) => {
@@ -28,6 +28,15 @@ const Profile = ({navigation}) => {
         <View style={{marginTop: 20, gap: 15}}>
           <CustomText style={styles.profileText} text={fakeUserData.userName} font="bold" />
           <CustomText style={[styles.profileText, {fontSize: 20}]} text={fakeUserData.description} />
+          <View>
+          {
+            fakeUserData.interests.map((interest, index) => {
+              return (
+                <CustomText key={index} style={{fontSize: 20}} text={interest} />
+              );
+            })
+          }
+          </View>
         </View>
       </View>
     </View>

@@ -74,6 +74,7 @@ const SignUp = ({ navigation }) => {
       await set(userRef, {
         userName: userName,
         email: email,
+        userID: response.user.uid,
       });
 
       navigation.navigate("Decision");

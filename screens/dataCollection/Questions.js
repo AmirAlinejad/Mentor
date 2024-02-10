@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated, ScrollView } from 'react-native';
 import { db } from '../../backend/FirebaseConfig';
 import { get, ref, update } from 'firebase/database';
 import { getUserID, getUserData } from '../../functions/functions';
+import ToggleButton from '../../components/ToggleButton';
 
 // Sample questions array
 const questions = [
@@ -23,7 +24,7 @@ const questions = [
     question: "What city are you from?",
   },
   {
-    key: 'interest',
+    key: 'interests',
     question: "What are your interests?",
   },
   {
@@ -33,29 +34,58 @@ const questions = [
   // Add more questions as needed
 ];
 
+// interest categories
+const interestsArray = [
+  'Art',
+  'Music',
+  'Sports',
+  'Food',
+  'Travel',
+  'Fashion',
+  'Technology',
+  'Science',
+  'Health',
+  'Fitness',
+  'Education',
+  'Entertainment',
+  'Business',
+  'Finance',
+  'Politics',
+  'Religion',
+  'Other',
+];
+
 const Questions = ({ navigation }) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [fadeAnim] = useState(new Animated.Value(1)); // For fade animation
   const [userData, setUserData] = useState({});
+  const [interests, setInterests] = useState([]);
 
   const handleSubmit = async () => {
     getUserData(getUserID(), setUserData).then(() => { // Get the user data
 
-      if (answer.trim() === '') {
+      if (answer.trim() === '' && questions[currentQuestionIndex].key !== 'interests') {
         Alert.alert("Error", "Please provide an answer before submitting.");
         return;
       }
 
       // Construct the answer object
-      const userAnswer = { question: questions[currentQuestionIndex], answer: answer };
+      let userAnswer = { [questions[currentQuestionIndex].key]: answer };
 
       // Specify the path to include user data along with answers
       const userRef = ref(db, `users/${getUserID()}`);
 
+      // change update data depending on question
+      if (questions[currentQuestionIndex].key === 'interests') {
+        userAnswer = {
+          [questions[currentQuestionIndex].key]: interests,
+        };
+      }
+
       // Push the answer to the database
-      update(userRef, {[questions[currentQuestionIndex].key]: userAnswer.answer}).then(() => {
+      update(userRef, userAnswer).then(() => {
 
         setAnswer(''); // Clear the answer input
         animateToNextQuestion();
@@ -88,13 +118,40 @@ const Questions = ({ navigation }) => {
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <Text style={styles.question}>{questions[currentQuestionIndex].question}</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setAnswer}
-        value={answer}
-        placeholder="Your answer here"
-        multiline
-      />
+      {questions[currentQuestionIndex].key === 'interests' ? (
+        <ScrollView style={{ height: 200 }} horizontal>
+        {
+          interestsArray.map((interest, index) => {
+            const onToggle = async () => {
+              if (interests.includes(interest)) {
+                setInterests(interests.filter(item => item !== interest));
+              } else {
+                setInterests([...interests, interest]);
+              }
+            } 
+
+            return (
+              <View>
+                <ToggleButton
+                  key={index}
+                  text={interest}
+                  onPress={onToggle}
+                  toggled={interests.includes(interest)}
+                />
+              </View>
+            )
+          })
+        }
+        </ScrollView>
+      ) : (
+        <TextInput
+          style={styles.input}
+          onChangeText={setAnswer}
+          value={answer}
+          placeholder="Your answer here"
+          multiline
+        />
+      )}
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>

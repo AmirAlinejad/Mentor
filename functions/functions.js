@@ -81,9 +81,27 @@ const getUserData = async (userId, setter) => {
   }
 };
 
+// update all user data
+const getAllUserData = async (setter) => {
+  try {
+    const usersRef = ref(db, `users`);
+    const usersSnapshot = await get(usersRef);
+
+    if (usersSnapshot.exists()) {
+      const usersData = usersSnapshot.val();
+
+      // set user data
+      setter(usersData);
+      console.log(usersData);
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+};
+
 const getUserID = () => {
   const user = auth.currentUser;
   return user.uid;
 };
 
-export { filterKeywordsOpenAI, scoreMentor, getUserData, getUserID }
+export { filterKeywordsOpenAI, scoreMentor, getUserData, getAllUserData, getUserID }

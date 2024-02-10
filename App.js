@@ -19,7 +19,7 @@ export default class App extends React.Component {
   render() {
       return (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName='Profile'>
+          <Stack.Navigator initialRouteName=''>
             <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
             <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
