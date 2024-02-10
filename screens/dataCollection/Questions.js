@@ -4,6 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { db } from '../../backend/FirebaseConfig';
 import { ref, update } from 'firebase/database';
 import { getUserID, getUserData } from '../../functions/functions';
+import ToggleButton from '../../components/ToggleButton';
 
 const questions = [
   {
@@ -22,7 +23,7 @@ const questions = [
   options: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'Other']
   },
   {
-    key: 'interest',
+    key: 'interests',
     question: "What are your interests?",
     options: null,
   },
@@ -33,24 +34,61 @@ const questions = [
   },
 ];
 
+// interest categories
+const interestsArray = [
+  'Art',
+  'Music',
+  'Sports',
+  'Food',
+  'Travel',
+  'Fashion',
+  'Technology',
+  'Science',
+  'Health',
+  'Fitness',
+  'Education',
+  'Entertainment',
+  'Business',
+  'Finance',
+  'Politics',
+  'Religion',
+  'Other',
+];
+
 const Questions = ({ navigation }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [fadeAnim] = useState(new Animated.Value(1));
   const [userData, setUserData] = useState({});
+  const [interests, setInterests] = useState([]);
 
   const handleSubmit = async () => {
-    getUserData(getUserID(), setUserData).then(() => {
+    getUserData(getUserID(), setUserData).then(() => { // Get the user data
+
+      if (answer.trim() === '' && questions[currentQuestionIndex].key !== 'interests') {
+        Alert.alert("Error", "Please provide an answer before submitting.");
+        return;
+      }
+
+      // Construct the answer object
+      let userAnswer = { [questions[currentQuestionIndex].key]: answer };
+
+      // Specify the path to include user data along with answers
       const userRef = ref(db, `users/${getUserID()}`);
-      update(userRef, {[questions[currentQuestionIndex].key]: answer}).then(() => {
-        if (currentQuestionIndex < questions.length - 1) {
-          setCurrentQuestionIndex(currentQuestionIndex + 1);
-          setAnswer('');
-        } else {
-          Alert.alert("Completed", "You have answered all questions.");
-          navigation.navigate('Profile');
-        }
+
+      // change update data depending on question
+      if (questions[currentQuestionIndex].key === 'interests') {
+        userAnswer = {
+          [questions[currentQuestionIndex].key]: interests,
+        };
+      }
+
+      // Push the answer to the database
+      update(userRef, userAnswer).then(() => {
+
+        setAnswer(''); // Clear the answer input
         animateToNextQuestion();
+
       }).catch((error) => {
         console.error("Error updating user data", error);
         Alert.alert("Error", "Could not update user data.");
@@ -59,12 +97,20 @@ const Questions = ({ navigation }) => {
   };
 
   const animateToNextQuestion = () => {
+    // Fade out the current question
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 500,
       useNativeDriver: true,
     }).start(() => {
-      fadeAnim.setValue(1);
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1); // Move to next question
+        fadeAnim.setValue(1); // Immediately return opacity to 1 for the next question
+      } else {
+        // Handle the end of questions
+        Alert.alert("Completed", "You have answered all questions.");
+        navigation.navigate('HomeScren'); // Navigate to the home screen
+      }
     });
   };
 
@@ -97,12 +143,41 @@ const Questions = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Animated.View style={{ opacity: fadeAnim }}>
           <Text style={styles.question}>{questions[currentQuestionIndex].question}</Text>
-          {renderInputMethod()}
+          {questions[currentQuestionIndex].key === 'interests' ? (
+            <ScrollView style={{ height: 200 }} horizontal>
+            {
+              interestsArray.map((interest, index) => {
+                const onToggle = async () => {
+                  if (interests.includes(interest)) {
+                    setInterests(interests.filter(item => item !== interest));
+                  } else {
+                    setInterests([...interests, interest]);
+                  }
+                } 
+
+                return (
+                  <View>
+                    <ToggleButton
+                      key={index}
+                      text={interest}
+                      onPress={onToggle}
+                      toggled={interests.includes(interest)}
+                    />
+                  </View>
+                )
+              })
+            }
+            </ScrollView>
+          ) : (
+            renderInputMethod()
+          )}
         </Animated.View>
       </ScrollView>
+
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
