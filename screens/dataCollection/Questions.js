@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
 import { db } from '../../backend/FirebaseConfig';
-import { ref, push } from 'firebase/database';
-import { getUserID } from '../../functions/functions';
+import { get, ref, set } from 'firebase/database';
+import { getUserID, getUserData } from '../../functions/functions';
 
 // Sample questions array
 const questions = [
@@ -38,8 +38,11 @@ const Questions = ({ navigation }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [fadeAnim] = useState(new Animated.Value(1)); // For fade animation
+  const [userData, setUserData] = useState({});
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    getUserData(getUserID(), setUserData); // Get the user data
+
     if (answer.trim() === '') {
       Alert.alert("Error", "Please provide an answer before submitting.");
       return;
@@ -49,17 +52,21 @@ const Questions = ({ navigation }) => {
     const userAnswer = { question: questions[currentQuestionIndex], answer: answer };
 
     // Specify the path to include user data along with answers
-    const userAnswersRef = ref(db, `users/${getUserID()}/${questions[currentQuestionIndex].key}`);
+    const userRef = ref(db, `users/${getUserID()}`);
 
-    push(userAnswersRef, userAnswer)
-      .then(() => {
-        setAnswer(''); // Clear the answer input
-        animateToNextQuestion();
-      })
-      .catch((error) => {
-        console.error("Error writing answer to Firebase Database", error);
-        Alert.alert("Error", "Failed to submit your answer.");
-      });
+    // Push the answer to the database
+    console.log(userData);
+    const updatedUserData = {
+      ...userData,
+      [questions[currentQuestionIndex].key]: userAnswer.answer,
+    }
+    await set(userRef, updatedUserData)
+    setUserData(updatedUserData);
+    
+    console.log(userData);
+        
+    setAnswer(''); // Clear the answer input
+    animateToNextQuestion();
   };
 
   const animateToNextQuestion = () => {
@@ -75,7 +82,7 @@ const Questions = ({ navigation }) => {
       } else {
         // Handle the end of questions
         Alert.alert("Completed", "You have answered all questions.");
-        navigation.navigate('HomeScreen'); // Navigate to the next screen
+        navigation.navigate('Profile'); // Navigate to the home screen ***testing
       }
     });
   };
