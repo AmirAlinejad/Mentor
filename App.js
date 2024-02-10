@@ -2,8 +2,7 @@ import React from "react";
 // screens
 import SignUp from "./screens/auth/SignUp";
 import SignIn from "./screens/auth/SignIn";
-import Mentee from "./screens/dataCollection/Mentee";
-import Mentor from "./screens/dataCollection/Mentor";
+import Questions from "./screens/dataCollection/Questions";
 import Search from "./screens/Search";
 import Decision from "./screens/dataCollection/Decision";
 import Profile from "./screens/profile/Profile";
@@ -23,8 +22,7 @@ export default class App extends React.Component {
             <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
             <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
-            <Stack.Screen name="Mentee" component={Mentee} options={{ headerShown: false }} />
-            <Stack.Screen name="Mentor" component={Mentor} options={{ headerShown: false }} />
+            <Stack.Screen name="Questions" component={Questions} options={{ headerShown: false }} />
             <Stack.Screen name="Chats" component={Chats} options={{ headerShown: false }} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />

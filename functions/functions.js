@@ -1,6 +1,10 @@
 import OpenAI from "openai";
+import { getAuth } from 'firebase/auth';
+import { db } from '../backend/FirebaseConfig';
+import { ref, get } from "firebase/database";
 
 const openai = new OpenAI({ apiKey: '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'});
+const auth = getAuth();
 
 const filterKeywordsOpenAI = async (text) => {
 
@@ -59,31 +63,8 @@ const scoreMentor = (mentor) => {
   return score;
 };
 
-// backend functions
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { db } from '../backend/FirebaseConfig';
-import { ref, get } from "firebase/database";
-
-export const getUserData = (setter, setLoading) => {
-    // get user data from auth
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          await updateUserData(user.uid, setter);
-          setLoading(false);
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    });
-}
-
 // update user data (from useEffect)
-const updateUserData = async (userId, setter) => {
+const getUserData = async (userId, setter) => {
   try {
     const userRef = ref(db, `users/${userId}`);
     const userSnapshot = await get(userRef);
@@ -100,4 +81,9 @@ const updateUserData = async (userId, setter) => {
   }
 };
 
-export { filterKeywordsOpenAI, scoreMentor, updateUserData, getUserData }
+const getUserID = () => {
+  const user = auth.currentUser;
+  return user.uid;
+};
+
+export { filterKeywordsOpenAI, scoreMentor, getUserData, getUserID }

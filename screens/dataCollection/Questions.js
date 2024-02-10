@@ -1,42 +1,55 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
-import { getDatabase, ref, push } from 'firebase/database';
-import { getAuth } from 'firebase/auth';
+import { db } from '../../backend/FirebaseConfig';
+import { ref, push } from 'firebase/database';
+import { getUserID } from '../../functions/functions';
 
 // Sample questions array
 const questions = [
-  "How old are you",
-  "Ethnicity",
-  "City,State",
-  "Interest",
-  "Tell us about you"
+  {
+    key: 'age',
+    question: "How old are you?",
+  },
+  {
+    key: 'ethnicity',
+    question: "What is your ethnicity?",
+  },
+  {
+    key: 'state',
+    question: "What state are you from?",
+  },
+  {
+    key: 'city',
+    question: "What city are you from?",
+  },
+  {
+    key: 'interest',
+    question: "What are your interests?",
+  },
+  {
+    key: 'aboutYou',
+    question: "Tell us about you",
+  },
   // Add more questions as needed
 ];
 
-const Mentee = ({ navigation }) => {
+const Questions = ({ navigation }) => {
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [fadeAnim] = useState(new Animated.Value(1)); // For fade animation
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const db = getDatabase();
 
   const handleSubmit = () => {
-    if (!user) {
-      Alert.alert("Error", "No authenticated user found.");
-      return;
-    }
     if (answer.trim() === '') {
       Alert.alert("Error", "Please provide an answer before submitting.");
       return;
     }
 
     // Construct the answer object
-    const questionId = `Q${currentQuestionIndex + 1}`;
     const userAnswer = { question: questions[currentQuestionIndex], answer: answer };
 
     // Specify the path to include user data along with answers
-    const userAnswersRef = ref(db, `users/${user.uid}/answers/${questionId}`);
+    const userAnswersRef = ref(db, `users/${getUserID()}/${questions[currentQuestionIndex].key}`);
 
     push(userAnswersRef, userAnswer)
       .then(() => {
@@ -62,13 +75,14 @@ const Mentee = ({ navigation }) => {
       } else {
         // Handle the end of questions
         Alert.alert("Completed", "You have answered all questions.");
+        navigation.navigate('HomeScreen'); // Navigate to the next screen
       }
     });
   };
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-      <Text style={styles.question}>{questions[currentQuestionIndex]}</Text>
+      <Text style={styles.question}>{questions[currentQuestionIndex].question}</Text>
       <TextInput
         style={styles.input}
         onChangeText={setAnswer}
@@ -114,5 +128,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Mentee;
+export default Questions;
 
