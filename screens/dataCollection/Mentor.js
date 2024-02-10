@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const Profile = ({navigation}) => {
+const Mentor = ({navigation}) => {
   return (
     <View>
-      <Text>Profile</Text>
+      <Text>Mentor Questions</Text>
+      
     </View>
   );
 };
 
-export default Profile;
+export default Mentor;

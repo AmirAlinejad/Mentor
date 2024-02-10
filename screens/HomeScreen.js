@@ -7,11 +7,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // my components
 import Profile from './profile/Profile';
-import Chats from './Chats'
+import Chats from './Chats';
+import Search from './Search';
+
 const Tab = createBottomTabNavigator();
 function HomeScreen({navigation}) { 
 
-  function HomeScreen() {
+  function ChatsTab() {
     return (
       <View style={{ flex: 1,  justifyContent: 'center' }}>
         <Chats navigation={navigation} />
@@ -19,7 +21,7 @@ function HomeScreen({navigation}) {
     );
   }
 
-  function Chats() {
+  function SearchTab() {
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <Search navigation={navigation} />
@@ -48,8 +50,8 @@ function HomeScreen({navigation}) {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
     
-            if (route.name === 'Chat') {
-              iconName = focused ? 'home' : 'home-outline';
+            if (route.name === 'Chats') {
+              iconName = focused ? 'chat' : 'bubble-outline';
             } else if (route.name === 'Search') {
               iconName = focused ? 'search' : 'search-outline';
             }else if (route.name === 'Profile') {
@@ -60,8 +62,8 @@ function HomeScreen({navigation}) {
           },
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Tab.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
+        <Tab.Screen name="Chats" component={ChatsTab} options={{ headerShown: false }} />
+        <Tab.Screen name="Search" component={SearchTab} options={{ headerShown: false }} />
         <Tab.Screen name="Profile" component={ProfileTab} options={{ headerShown: false }} />
       </Tab.Navigator>
     );
