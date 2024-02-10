@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
 import { db } from '../../backend/FirebaseConfig';
-import { ref, push } from 'firebase/database';
-import { getUserID } from '../../functions/functions';
+import { get, ref, update } from 'firebase/database';
+import { getUserID, getUserData } from '../../functions/functions';
 
 // Sample questions array
 const questions = [
@@ -38,28 +38,33 @@ const Questions = ({ navigation }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [fadeAnim] = useState(new Animated.Value(1)); // For fade animation
+  const [userData, setUserData] = useState({});
 
-  const handleSubmit = () => {
-    if (answer.trim() === '') {
-      Alert.alert("Error", "Please provide an answer before submitting.");
-      return;
-    }
+  const handleSubmit = async () => {
+    getUserData(getUserID(), setUserData).then(() => { // Get the user data
 
-    // Construct the answer object
-    const userAnswer = { question: questions[currentQuestionIndex], answer: answer };
+      if (answer.trim() === '') {
+        Alert.alert("Error", "Please provide an answer before submitting.");
+        return;
+      }
 
-    // Specify the path to include user data along with answers
-    const userAnswersRef = ref(db, `users/${getUserID()}/${questions[currentQuestionIndex].key}`);
+      // Construct the answer object
+      const userAnswer = { question: questions[currentQuestionIndex], answer: answer };
 
-    push(userAnswersRef, userAnswer)
-      .then(() => {
+      // Specify the path to include user data along with answers
+      const userRef = ref(db, `users/${getUserID()}`);
+
+      // Push the answer to the database
+      update(userRef, {[questions[currentQuestionIndex].key]: userAnswer.answer}).then(() => {
+
         setAnswer(''); // Clear the answer input
         animateToNextQuestion();
-      })
-      .catch((error) => {
-        console.error("Error writing answer to Firebase Database", error);
-        Alert.alert("Error", "Failed to submit your answer.");
+
+      }).catch((error) => {
+        console.error("Error updating user data", error);
+        Alert.alert("Error", "Could not update user data.");
       });
+    });
   };
 
   const animateToNextQuestion = () => {
@@ -75,7 +80,7 @@ const Questions = ({ navigation }) => {
       } else {
         // Handle the end of questions
         Alert.alert("Completed", "You have answered all questions.");
-        navigation.navigate('HomeScreen'); // Navigate to the next screen
+        navigation.navigate('Profile'); // Navigate to the home screen ***testing
       }
     });
   };

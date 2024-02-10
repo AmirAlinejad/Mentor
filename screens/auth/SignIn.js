@@ -59,7 +59,7 @@ const SignIn = ({ navigation }) => {
       if (userSnapshot.exists()) {
         console.log('User Data:', userSnapshot.val());
         const userStatus = userSnapshot.val().status; // Assuming the status is stored under the key 'status'
-        navigation.navigate("HomeScreen", { userStatus }); // Pass userStatus as a parameter
+        navigation.navigate("Profile", { userStatus }); // Pass userStatus as a parameter
       } else {
         console.log('User data not found in the database.');
         // Consider handling this case, perhaps navigating to a different screen or showing an error

@@ -2,7 +2,7 @@ import React from 'react';
 // react native components
 import { Text } from 'react-native';
 // fonts
-import { useFonts, Recursive_300Light, Recursive_400Regular, Recursive_800ExtraBold, Recursive_900Black } from '@expo-google-fonts/Recursive';
+import { useFonts, Recursive_300Light, Recursive_400Regular, Recursive_800ExtraBold, Recursive_900Black } from '@expo-google-fonts/recursive';
 
 const CustomText = ({ text, style, font, onPress }) => {
   // load fonts
