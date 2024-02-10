@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { getUserData, getUserID } from '../../functions/functions';
 
 const Profile = ({navigation}) => {
-  const [userData, setUserData] = useState({});
+  
 
 
   return (
