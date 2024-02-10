@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
 import { db } from '../../backend/FirebaseConfig';
-import { get, ref, set } from 'firebase/database';
+import { get, ref, update } from 'firebase/database';
 import { getUserID, getUserData } from '../../functions/functions';
 
 // Sample questions array
@@ -41,32 +41,30 @@ const Questions = ({ navigation }) => {
   const [userData, setUserData] = useState({});
 
   const handleSubmit = async () => {
-    getUserData(getUserID(), setUserData); // Get the user data
+    getUserData(getUserID(), setUserData).then(() => { // Get the user data
 
-    if (answer.trim() === '') {
-      Alert.alert("Error", "Please provide an answer before submitting.");
-      return;
-    }
+      if (answer.trim() === '') {
+        Alert.alert("Error", "Please provide an answer before submitting.");
+        return;
+      }
 
-    // Construct the answer object
-    const userAnswer = { question: questions[currentQuestionIndex], answer: answer };
+      // Construct the answer object
+      const userAnswer = { question: questions[currentQuestionIndex], answer: answer };
 
-    // Specify the path to include user data along with answers
-    const userRef = ref(db, `users/${getUserID()}`);
+      // Specify the path to include user data along with answers
+      const userRef = ref(db, `users/${getUserID()}`);
 
-    // Push the answer to the database
-    console.log(userData);
-    const updatedUserData = {
-      ...userData,
-      [questions[currentQuestionIndex].key]: userAnswer.answer,
-    }
-    await set(userRef, updatedUserData)
-    setUserData(updatedUserData);
-    
-    console.log(userData);
-        
-    setAnswer(''); // Clear the answer input
-    animateToNextQuestion();
+      // Push the answer to the database
+      update(userRef, {[questions[currentQuestionIndex].key]: userAnswer.answer}).then(() => {
+
+        setAnswer(''); // Clear the answer input
+        animateToNextQuestion();
+
+      }).catch((error) => {
+        console.error("Error updating user data", error);
+        Alert.alert("Error", "Could not update user data.");
+      });
+    });
   };
 
   const animateToNextQuestion = () => {
