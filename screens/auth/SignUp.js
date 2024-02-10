@@ -74,6 +74,9 @@ const SignUp = ({ navigation }) => {
       await set(userRef, {
         userName: userName,
         email: email,
+        mentors: [],
+        mentees: [],
+        request: [],
       });
 
       navigation.navigate("Decision");
