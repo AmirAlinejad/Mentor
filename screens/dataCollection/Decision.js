@@ -15,7 +15,7 @@ const Decision = ({ navigation }) => {
         status: status,
       })
       .then(() => {
-        navigation.navigate(status === 'mentor' ? 'Mentor' : 'Mentee');
+        navigation.navigate('Questions');
       })
       .catch((error) => {
         console.error("Error updating user status", error);
