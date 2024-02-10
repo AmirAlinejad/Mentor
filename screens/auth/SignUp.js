@@ -77,6 +77,7 @@ const SignUp = ({ navigation }) => {
         mentors: [],
         mentees: [],
         request: [],
+        userID: response.user.uid,
       });
 
       navigation.navigate("Decision");

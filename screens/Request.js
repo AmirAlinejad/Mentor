@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity, TextInput } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ref, get, update, remove } from 'firebase/database';
+import { ref, get, set, remove } from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
 import Header from '../components/Header';
+
 const Request = () => {
   const [requestMembers, setRequestMembers] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -54,12 +55,25 @@ const Request = () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    // Add requestId to the user's mentees list
+    // update mentees array
+    // get snapshot
     const menteesRef = ref(db, `users/${user.uid}/mentees`);
-    await update(menteesRef, { [requestId]: true });
+    const menteesSnapshot = await get(menteesRef);
 
-    // Remove requestId from the user's requests list
-    await remove(ref(db, `users/${user.uid}/requests/${requestId}`));
+    // update mentees array
+    let menteesArray = menteesSnapshot.val() || [];
+    menteesArray.push(requestId);
+    await set(menteesRef, menteesArray);
+
+    // update requests array
+    // get snapshot
+    const requestsRef = ref(db, `users/${user.uid}/requests`);
+    const requestsSnapshot = await get(requestsRef);
+
+    // update requests array
+    let requestsArray = requestsSnapshot.val() || [];
+    requestsArray = requestsArray.filter((id) => id !== requestId);
+    await set(requestsRef, requestsArray);
 
     // Refresh the request list
     fetchRequests(user.uid);
@@ -70,8 +84,15 @@ const Request = () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    // Remove requestId from the user's requests list
-    await remove(ref(db, `users/${user.uid}/requests/${requestId}`));
+    // update requests array
+    // get snapshot
+    const requestsRef = ref(db, `users/${user.uid}/requests`);
+    const requestsSnapshot = await get(requestsRef);
+
+    // update requests array
+    let requestsArray = requestsSnapshot.val() || [];
+    requestsArray = requestsArray.filter((id) => id !== requestId);
+    await set(requestsRef, requestsArray);
 
     // Refresh the request list
     fetchRequests(user.uid);
@@ -148,4 +169,3 @@ const styles = StyleSheet.create({
 });
 
 export default Request;
-
