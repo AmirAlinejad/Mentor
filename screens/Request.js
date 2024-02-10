@@ -4,7 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ref, get, update, remove } from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
-
+import Header from '../components/Header';
 const Request = () => {
   const [requestMembers, setRequestMembers] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -100,6 +100,7 @@ const Request = () => {
 
   return (
     <View style={styles.container}>
+      <Header text="Requests" />
       <TextInput
         style={styles.searchBar}
         placeholder="Search for a user..."
