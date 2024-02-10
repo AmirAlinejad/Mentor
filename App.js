@@ -7,6 +7,7 @@ import Mentor from "./screens/dataCollection/Mentor";
 import Search from "./screens/Search";
 import Decision from "./screens/dataCollection/Decision";
 import Profile from "./screens/profile/Profile";
+import Request from "./screens/Request";
 // stack navigator
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,6 +30,7 @@ export default class App extends React.Component {
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
             <Stack.Screen name="Decision" component={Decision} options={{ headerShown: false }} />
+            <Stack.Screen name="Request" component={Request} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       );

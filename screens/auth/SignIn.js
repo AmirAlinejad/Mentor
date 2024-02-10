@@ -50,25 +50,27 @@ const SignIn = ({ navigation }) => {
       setLoading(false);
       return;
     }
-
+  
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       const userRef = ref(db, `users/${response.user.uid}`);
       const userSnapshot = await get(userRef);
-
+  
       if (userSnapshot.exists()) {
         console.log('User Data:', userSnapshot.val());
+        const userStatus = userSnapshot.val().status; // Assuming the status is stored under the key 'status'
+        navigation.navigate("HomeScreen", { userStatus }); // Pass userStatus as a parameter
       } else {
         console.log('User data not found in the database.');
+        // Consider handling this case, perhaps navigating to a different screen or showing an error
       }
-
-      navigation.navigate("HomeScreen");
     } catch (error) {
       Alert.alert("Sign-in failed", error.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const onForgotPasswordPressed = () => {
     Alert.alert('Notice', 'Forgot password feature coming soon!');

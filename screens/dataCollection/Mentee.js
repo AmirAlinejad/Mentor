@@ -58,10 +58,11 @@ const Mentee = ({ navigation }) => {
     }).start(() => {
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1); // Move to next question
-        fadeAnim.setValue(1); // Immediately return opacity to 1 for the next question
+        fadeAnim.setValue(1); 
       } else {
         // Handle the end of questions
         Alert.alert("Completed", "You have answered all questions.");
+        navigation.navigate("HomeScreen")
       }
     });
   };
