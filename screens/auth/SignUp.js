@@ -74,6 +74,9 @@ const SignUp = ({ navigation }) => {
       await set(userRef, {
         userName: userName,
         email: email,
+        mentors: [],
+        mentees: [],
+        request: [],
         userID: response.user.uid,
       });
 
@@ -97,8 +100,8 @@ const SignUp = ({ navigation }) => {
 
       <Input placeholder="Username" value={userName} setValue={setUserName} />
       <Input placeholder="Email" value={email} setValue={setEmail} keyboardType="email-address" />
-      <Input placeholder="Password" value={password} setValue={setPassword} secureTextEntry={!passwordVisible} />
-      <Input placeholder="Confirm Password" value={confirmPassword} setValue={setConfirmPassword} secureTextEntry={!passwordVisible} />
+      <Input placeholder="Password" value={password} setValue={setPassword} secureTextEntry />
+      <Input placeholder="Confirm Password" value={confirmPassword} setValue={setConfirmPassword} secureTextEntry />
 
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />

@@ -133,6 +133,19 @@ const Request = () => {
         renderItem={renderRequests}
         keyExtractor={(item) => item.id}
       />
+    <View style={styles.container}>
+      <Header text="Requests" />
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search for a user..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+      <FlatList
+        data={filteredRequests}
+        renderItem={renderRequests}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };
@@ -168,4 +181,36 @@ const styles = StyleSheet.create({
   },
 });
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  searchBar: {
+    fontSize: 18,
+    padding: 10,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  requestItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  userName: {
+    fontSize: 16,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});
+
 export default Request;
+

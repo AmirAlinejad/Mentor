@@ -10,7 +10,6 @@ import { db } from "../backend/FirebaseConfig";
 const MemberCard = ({navigation, user, userID }) => {
 
     const sendRequest = async () => {
-
         const auth = getAuth();
         const currentUser = auth.currentUser;
       
