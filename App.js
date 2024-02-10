@@ -1,11 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { filterKeywordsOpenAI, scoreMentor } from "./functions/functions";
 
 export default function App() {
+  const [response, setResponse] = useState("");
+
+  const generateKeywords = async () => {
+    // disabled for now to avoid OpenAI charges
+    // setResponse(await filterKeywordsOpenAI("The quick brown fox jumps over the lazy dog."));
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Button title="Generate Text" onPress={generateKeywords} />
+      <Text>{response}</Text>
     </View>
   );
 }
