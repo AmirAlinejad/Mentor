@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Colors } from "../styles/Colors";
 import CustomText from "./CustomText";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -9,13 +9,24 @@ import { db } from "../backend/FirebaseConfig";
 import * as Linking from 'expo-linking';
 
 const RequestCard = ({ navigation, user, ignore, accept }) => {
+    // state
+    const [profileImage, setProfileImage] = React.useState(null);
 
-    const sendEmail = async () => {
-        Linking.openURL('mailto:' + user.email).catch(error => {
-            console.log(error);
+    useEffect(() => {
+        const imageRef = ref(db, `users/${user.id}/profileImage`);
+        get(imageRef).then((snapshot) => {
+          if (snapshot.exists()) {
+            const imageUrl = snapshot.val();
+            setProfileImage(imageUrl);
+          } else {
+            console.log("No image URL found.");
+          }
+        }).catch((error) => {
+          console.error("Error fetching profile image:", error);
         });
-    };
-  
+    }
+    , []);
+    
     return (
       <TouchableOpacity style={styles.card}
          onPress={() => navigation.navigate("Profile", {
@@ -25,8 +36,8 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
         <View style={styles.cardLayout}>
             <View style={styles.profileItems}>
                 <View style={styles.avatar}>
-                {user.photoURL ? (
-                    <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
+                {profileImage ? (
+                    <Image source={{ uri: profileImage }} style={styles.avatarImage} />
                   ) : (
                     <Text style={styles.addPhotoText}></Text>
                   )}

@@ -133,7 +133,7 @@ const Request = ({ navigation }) => {
   const renderRequests = ({ item }) => (
     <RequestCard 
       navigation={navigation}
-      user={item} 
+      user={user.id} 
         accept={() => handleAcceptRequest(item.id)} 
         ignore={() => handleIgnoreRequest(item.id)} 
       />
