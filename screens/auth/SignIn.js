@@ -13,7 +13,7 @@ import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { get, ref } from 'firebase/database';
 import { db } from '../../backend/FirebaseConfig';
 
-// Assuming these are custom components, providing simplified versions
+
 const Input = ({ placeholder, value, setValue, secureTextEntry, keyboardType, onEyeIconPress }) => (
   <TextInput
     placeholder={placeholder}
@@ -34,7 +34,7 @@ const Button = ({ text, onPress, bgColor }) => (
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(true); // Updated for clarity
+  const [passwordVisible, setPasswordVisible] = useState(true); 
   const [loading, setLoading] = useState(false);
 
   const auth = getAuth();
@@ -58,11 +58,11 @@ const SignIn = ({ navigation }) => {
   
       if (userSnapshot.exists()) {
         console.log('User Data:', userSnapshot.val());
-        const userStatus = userSnapshot.val().status; // Assuming the status is stored under the key 'status'
-        navigation.navigate("HomeScreen", { userStatus }); // Pass userStatus as a parameter
+        const userStatus = userSnapshot.val().status; 
+        navigation.navigate("HomeScreen", { userStatus }); 
       } else {
         console.log('User data not found in the database.');
-        // Consider handling this case, perhaps navigating to a different screen or showing an error
+        
       }
     } catch (error) {
       Alert.alert("Sign-in failed", error.message);

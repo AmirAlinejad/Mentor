@@ -81,7 +81,7 @@ const Questions = ({ navigation }) => {
     const userRef = ref(db, `users/${getUserID()}`);
     update(userRef, userAnswer).then(() => {
       setAnswer('');
-      setAge(20); // Reset age for next use
+      setAge(20); 
       animateToNextQuestion();
     }).catch((error) => {
       console.error("Error updating user data", error);
