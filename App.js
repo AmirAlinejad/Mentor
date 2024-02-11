@@ -20,15 +20,15 @@ export default class App extends React.Component {
       return (
         <NavigationContainer>
           <Stack.Navigator initialRouteName='SignIn'>
-            <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
-            <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
-            <Stack.Screen name="Questions" component={Questions} options={{ headerShown: false }} />
-            <Stack.Screen name="Chats" component={Chats} options={{ headerShown: false }} />
-            <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
-            <Stack.Screen name="Decision" component={Decision} options={{ headerShown: false }} />
-            <Stack.Screen name="Request" component={Request} options={{ headerShown: false }} />
+            <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Questions" component={Questions} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Chats" component={Chats} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Search" component={Search} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Decision" component={Decision} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Request" component={Request} options={{ headerShown: false, gestureEnabled: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       );

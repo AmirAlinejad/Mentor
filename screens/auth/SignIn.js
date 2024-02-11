@@ -12,6 +12,8 @@ import Logo from '../../assets/icon.png';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { get, ref } from 'firebase/database';
 import { db } from '../../backend/FirebaseConfig';
+import { Colors } from '../../styles/Colors';
+import CustomText from '../../components/CustomText';
 
 
 const Input = ({ placeholder, value, setValue, secureTextEntry, keyboardType, onEyeIconPress }) => (
@@ -81,9 +83,9 @@ const SignIn = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={Logo} style={styles.logo} resizeMode="contain" />
+      <Image source={Logo} style={styles.logo} resizeMode='cover' />
 
-      <Text style={styles.title}>Welcome Back!</Text>
+      <CustomText style={styles.title} text='Welcome back!' font='bold' />
 
       <Input
         placeholder="Email"
@@ -98,14 +100,12 @@ const SignIn = ({ navigation }) => {
         secureTextEntry={passwordVisible}
       />
 
-      <Button text="Sign In" onPress={onSignInPressed} bgColor={'#190482'} />
+      <Button text="Sign In" onPress={onSignInPressed} bgColor={Colors.purple} />
 
-      <TouchableOpacity style={styles.forgotPasswordButton} onPress={onForgotPasswordPressed}>
-        <Text style={styles.forgotPasswordButtonText}>Forgot Password?</Text>
+      <CustomText style={styles.signupText} text="Don't have an account?" />
+      <TouchableOpacity onPress={onSignUp} style={{marginBottom: 125}}>
+        <CustomText style={styles.signupLink} text="Sign Up"/>
       </TouchableOpacity>
-
-      <Text style={styles.signupText}>Don't have an account?</Text>
-      <Text style={styles.signupLink} onPress={onSignUp}>Sign Up</Text>
     </View>
   );
 };
@@ -118,9 +118,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
+    width: 300,
+    height: 300,
+    marginBottom: -40,
     marginTop: -80
   },
   title: {
@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
   forgotPasswordButtonText: {
     fontSize: 16,
     color: 'black',
-    
   },
   
   buttonText: {

@@ -7,6 +7,9 @@ import { getUserID, getUserData } from '../../functions/functions';
 import ToggleButton from '../../components/ToggleButton';
 import Slider from '@react-native-community/slider';
 import * as Progress from 'react-native-progress';
+import { Colors } from '../../styles/Colors';
+import CustomText from '../../components/CustomText';
+
 const questions = [
   {
     key: 'age',
@@ -37,23 +40,25 @@ const questions = [
 
 // interest categories
 const interestsArray = [
-  'Art',
-  'Music',
-  'Sports',
-  'Food',
-  'Travel',
-  'Fashion',
-  'Technology',
-  'Science',
-  'Health',
-  'Fitness',
-  'Education',
-  'Entertainment',
-  'Business',
-  'Finance',
-  'Politics',
-  'Religion',
-  'Other',
+  [
+    "Art",
+    "Music",
+    "Athletics",
+  ],
+  [
+    "Technology",
+    "Science",
+    "Math",
+  ],
+  [
+    "Career",
+    "Mental Health",
+    "Wellness",
+  ],
+  [
+    "Finance",
+    "Entrepreneurship",
+  ]
 ];
 
 const Questions = ({ navigation }) => {
@@ -61,7 +66,7 @@ const Questions = ({ navigation }) => {
   const [answer, setAnswer] = useState('');
   const [fadeAnim] = useState(new Animated.Value(1));
   const [userData, setUserData] = useState({});
-  const [interests, setInterests] = useState([]);
+  const [userInterests, setInterests] = useState([]);
   const progress = (currentQuestionIndex + 1) / questions.length;
   const [age, setAge] = useState(20);
   const handleSubmit = async () => {
@@ -81,7 +86,7 @@ const Questions = ({ navigation }) => {
       // change update data depending on question
       if (questions[currentQuestionIndex].key === 'interests') {
         userAnswer = {
-          [questions[currentQuestionIndex].key]: interests,
+          [questions[currentQuestionIndex].key]: userInterests,
         };
       }
 
@@ -135,12 +140,12 @@ const Questions = ({ navigation }) => {
             step={1}
             minimumValue={18}
             maximumValue={100}
-            minimumTrackTintColor="#1fb28a"
-            maximumTrackTintColor="#d3d3d3"
+            minimumTrackTintColor={Colors.purple}
+            maximumTrackTintColor={Colors.lightBlue}
             value={age}
             onValueChange={(value) => setAge(value)}
           />
-          <Text>Selected Age: {age}</Text>
+          <CustomText style={{marginLeft: -30 + age * 2}} font="bold" text={age} />
         </View>
       );
     }
@@ -171,35 +176,37 @@ const Questions = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Progress.Bar progress={progress} width={null} borderColor={"#000"} borderWidth={2} color={"#7752FE"} style={styles.progressBar} />
+      <Progress.Bar 
+        progress={progress} 
+        width={null} 
+        borderColor={"#000"} borderWidth={0} color={Colors.purple} unfilledColor={Colors.lightBlue} style={styles.progressBar} />
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Animated.View style={{ opacity: fadeAnim }}>
-          <Text style={styles.question}>{questions[currentQuestionIndex].question}</Text>
+          <CustomText text={questions[currentQuestionIndex].question} font="bold" style={styles.question} />
           {questions[currentQuestionIndex].key === 'interests' ? (
-            <ScrollView style={{ height: 200 }} horizontal>
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
             {
-              interestsArray.map((interest, index) => {
-                const onToggle = async () => {
-                  if (interests.includes(interest)) {
-                    setInterests(interests.filter(item => item !== interest));
-                  } else {
-                    setInterests([...interests, interest]);
+              interestsArray.map((interests, index) => {
+                return  (
+                  <View key={index} style={{flexDirection: 'row', justifyContent: 'center'}}>
+                  {
+                    interests.map((interest, i) => {
+                      return (
+                        <ToggleButton key={i} text={interest} toggled={userInterests.includes(interest)} onPress={() => {
+                          if (userInterests.includes(interest)) {
+                            setInterests(userInterests.filter(item => item !== interest));
+                          } else {
+                            setInterests([...userInterests, interest]);
+                          }
+                        }} />
+                      );
+                    })
                   }
-                } 
-
-                return (
-                  <View>
-                    <ToggleButton
-                      key={index}
-                      text={interest}
-                      onPress={onToggle}
-                      toggled={interests.includes(interest)}
-                    />
                   </View>
                 )
               })
             }
-            </ScrollView>
+            </View>
           ) : (
             renderInputMethod()
           )}
@@ -207,7 +214,7 @@ const Questions = ({ navigation }) => {
       </ScrollView>
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
+        <CustomText font="bold" style={styles.buttonText} text="Submit" />
       </TouchableOpacity>
     </View>
   );
@@ -233,12 +240,13 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: Colors.gray,
     width: 300,
     padding: 10,
     marginBottom: 10,
     height: 100,
     marginTop: 50,
+    borderRadius: 10,
   },
   picker: {
     width: '100%',
@@ -247,7 +255,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#7752FE',
-    padding: 10,
+    padding: 15,
     borderRadius: 40,
     width: '50%',
     marginBottom: 350,

@@ -15,6 +15,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { ref, set } from 'firebase/database';
 import { FIREBASE_AUTH, db } from '../../backend/FirebaseConfig';
 import CustomText from '../../components/CustomText';
+import { Colors } from '../../styles/Colors';
 // Simplified Input component
 const Input = ({ placeholder, value, setValue, secureTextEntry, keyboardType, onEyeIconPress }) => (
   <TextInput
@@ -41,9 +42,7 @@ const SignUp = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [loading, setLoading] = useState(false);
   const { height } = useWindowDimensions();
-  const auth = FIREBASE_AUTH;
-
- 
+  const auth = FIREBASE_AUTH; 
 
   const onSignUpPressed = async () => {
     setLoading(true);
@@ -53,7 +52,6 @@ const SignUp = ({ navigation }) => {
       setLoading(false);
       return;
     }
-
 
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -86,9 +84,9 @@ const SignUp = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={Logo} style={[styles.logo, { height: height * 0.2 }]} resizeMode="contain" />
+      <Image source={Logo} style={[styles.logo, { height: height * 0.2 }]} resizeMode="cover" />
 
-      <Text style={styles.title}>Sign Up!</Text>
+      <CustomText style={styles.title} font="bold" text="Sign up!"/>
 
       <Input placeholder="Username" value={userName} setValue={setUserName} />
       <Input placeholder="Email" value={email} setValue={setEmail} keyboardType="email-address" />
@@ -98,12 +96,12 @@ const SignUp = ({ navigation }) => {
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <Button text="Sign Up" onPress={onSignUpPressed} bgColor={'#190482'} />
+        <Button text="Sign Up" onPress={onSignUpPressed} bgColor={Colors.purple} />
       )}
 
-      <Text style={styles.signupText}>Have an account already?</Text>
+      <CustomText style={styles.signupText} text="Have an account already?" />
       <TouchableOpacity onPress={onLoginIn}>
-        <Text style={styles.signupLink}>Log In</Text>
+        <CustomText style={styles.signupLink} text="Sign in"/>
       </TouchableOpacity>
     </View>
   );
@@ -119,6 +117,8 @@ const styles = StyleSheet.create({
   logo: {
     width: '60%',
     marginTop: -100,
+    width: 300,
+    height: 300,
   },
   title: {
     fontSize: 28,
