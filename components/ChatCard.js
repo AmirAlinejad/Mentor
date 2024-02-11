@@ -9,6 +9,23 @@ import { db } from "../backend/FirebaseConfig";
 import * as Linking from 'expo-linking';
 
 const ChatCard = ({ navigation, user }) => {
+    // state
+    const [profileImage, setProfileImage] = React.useState(null);
+
+    React.useEffect(() => {
+        const imageRef = ref(db, `users/${user.id}/profileImage`);
+        get(imageRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const imageUrl = snapshot.val();
+                setProfileImage(imageUrl);
+            } else {
+                console.log("No image URL found.");
+            }
+        }).catch((error) => {
+            console.error("Error fetching profile image:", error);
+        });
+    }
+    , []);
 
     const sendEmail = async () => {
         Linking.openURL('mailto:' + user.email).catch(error => {
@@ -21,8 +38,8 @@ const ChatCard = ({ navigation, user }) => {
         <View style={styles.cardLayout}>
             <View style={styles.profileItems}>
                 <View style={styles.avatar}>
-                {user.photoID ? (
-                    <Image source={{ uri: user.photoID }} style={styles.avatarImage} />
+                {profileImage ? (
+                    <Image source={{ uri: profileImage }} style={styles.avatarImage} />
                   ) : (
                     <Text style={styles.addPhotoText}></Text>
                   )}
