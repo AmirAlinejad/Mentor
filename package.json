@@ -19,6 +19,7 @@
     "expo": "~50.0.6",
     "expo-font": "~11.10.2",
     "expo-image-picker": "^14.7.1",
+    "expo-linking": "^6.2.2",
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.8.0",
     "openai": "^4.27.0",

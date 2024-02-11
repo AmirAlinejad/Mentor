@@ -28,10 +28,20 @@ const Search = ({navigation}) => {
 
   // Get the user data
   useEffect(() => {
-    // Get the user data
-    getUserData(getUserID(), setUser);
-    // Get all user data
-    getAllUserData(setUsers);
+    // Function to fetch and filter user data
+    const fetchData = () => {
+      getUserData(getUserID(), setUser);
+      getAllUserData(setUsers);
+    };
+  
+    // Initial fetch
+    fetchData();
+  
+    // Set up interval to refresh data every second
+    const intervalId = setInterval(fetchData, 1000);
+  
+    // Cleanup function to clear the interval
+    return () => clearInterval(intervalId);
   }, []);
 
   // convert users object to array

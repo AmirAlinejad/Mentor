@@ -13,12 +13,21 @@ const Request = () => {
 
   useEffect(() => {
     const auth = getAuth();
+    let intervalId = null; // Declare a variable to store the interval ID
+  
     onAuthStateChanged(auth, (user) => {
       if (user) {
         fetchRequests(user.uid);
+        intervalId = setInterval(() => fetchRequests(user.uid), 1000); // Set up the interval
       }
     });
+  
+    // Cleanup function to clear the interval when the component unmounts or the user changes
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
+  
 
   useEffect(() => {
     filterRequests(searchQuery);
