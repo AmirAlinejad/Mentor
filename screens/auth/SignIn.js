@@ -71,7 +71,6 @@ const SignIn = ({ navigation }) => {
     }
   };
   
-
   const onForgotPasswordPressed = () => {
     Alert.alert('Notice', 'Forgot password feature coming soon!');
   };

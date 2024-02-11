@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity, TextInput } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ref, get, set, remove } from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
 import Header from '../components/Header';
+import RequestCard from '../components/RequestCard';
 
 const Request = () => {
   const [requestMembers, setRequestMembers] = useState([]);
@@ -55,25 +55,35 @@ const Request = () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    // update mentees array
+    // update mentor's (your) mentees array
     // get snapshot
     const menteesRef = ref(db, `users/${user.uid}/mentees`);
     const menteesSnapshot = await get(menteesRef);
 
-    // update mentees array
+    // create and set array
     let menteesArray = menteesSnapshot.val() || [];
     menteesArray.push(requestId);
     await set(menteesRef, menteesArray);
 
-    // update requests array
+    // update mentor (your) requests array
     // get snapshot
     const requestsRef = ref(db, `users/${user.uid}/requests`);
     const requestsSnapshot = await get(requestsRef);
 
-    // update requests array
+    // create and set array
     let requestsArray = requestsSnapshot.val() || [];
     requestsArray = requestsArray.filter((id) => id !== requestId);
     await set(requestsRef, requestsArray);
+
+    // update mentee's mentors array
+    // get snapshot
+    const mentorsRef = ref(db, `users/${requestId}/mentors`);
+    const mentorsSnapshot = await get(mentorsRef);
+
+    // create and set array
+    let mentorsArray = mentorsSnapshot.val() || [];
+    mentorsArray.push(user.uid);
+    await set(mentorsRef, mentorsArray);
 
     // Refresh the request list
     fetchRequests(user.uid);
@@ -106,28 +116,22 @@ const Request = () => {
   };
 
   const renderRequests = ({ item }) => (
-    <View style={styles.requestItem}>
-      <Text style={styles.userName}>{item.userName}</Text>
-      <View style={styles.actions}>
-        <TouchableOpacity onPress={() => handleAcceptRequest(item.id)}>
-          <MaterialCommunityIcons name="check-circle-outline" size={24} color="green" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleIgnoreRequest(item.id)}>
-          <MaterialCommunityIcons name="close-circle-outline" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    <RequestCard 
+      user={item} 
+        accept={() => handleAcceptRequest(item.id)} 
+        ignore={() => handleIgnoreRequest(item.id)} 
+      />
   );
 
   return (
     <View style={styles.container}>
       <Header text="Requests" />
-      <TextInput
+      {/*<TextInput
         style={styles.searchBar}
         placeholder="Search for a user..."
         value={searchQuery}
         onChangeText={setSearchQuery}
-      />
+      />*/}
       <FlatList
         data={filteredRequests}
         renderItem={renderRequests}

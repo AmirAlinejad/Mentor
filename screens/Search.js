@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Modal, Button, TextInput } from 'react-native';
-import { getUserData, getAllUserData, getUserID } from '../functions/functions';
+import { getUserData, getAllUserData, getUserID, scoreMentor } from '../functions/functions';
 import MemberCard from '../components/MemberCard';
 import Header from '../components/Header';
 import { Colors } from '../styles/Colors';
@@ -15,7 +15,7 @@ const Search = ({navigation}) => {
   const [user, setUser] = useState({});
   const [users, setUsers] = useState({});
   // filter parameters
-  const [interests, setInterests] = useState([]); // ['Art', 'Music', 'Sports']
+  const [interests, setInterests] = useState([]); // ['Art', 'Music', 'Sports'] these are the ones currently selected from all interests
   const [minAge, setMinAge] = useState(20);
   const [useEthnicity, setUseEthnicity] = useState(false);
   // filter state
@@ -44,33 +44,60 @@ const Search = ({navigation}) => {
     return user.status === 'mentor';
   });
 
+  // filter users array by all user's interests
+  usersArray = usersArray.filter((mentor) => {
+    if (!mentor.interests) return false;
 
+    return mentor.interests.some((interest) => user.interests.includes(interest));
+  });
+
+  // filter by filter properties
+  usersArray = usersArray.filter((mentor) => {
+    // filter 
+    // ethinicty
+    if (useEthnicity && mentor.ethnicity !== user.ethnicity) return false;
+    // age
+    if (mentor.age < minAge) return false;
+
+    return true;
+  });
+
+  // sort array using algorithm
+  if (user) {
+    usersArray.sort((a, b) => {
+      return scoreMentor(a, user, useEthnicity) - scoreMentor(b, user, useEthnicity);
+    });
+  }
 
   return (
     <View style={styles.container}>
       <Header navigation={navigation} text="Search" back={false} />
-      <ScrollView style={{ height: 75 }} horizontal>
-      {
-        user.interests && user.interests.map((interest, index) => {
-          const onToggle = () => {
-            if (interests.includes(interest)) {
-              setInterests(interests.filter((item) => item !== interest));
-            } else {
-              setInterests([...interests, interest]);
+      <View style={{ height: 65 }}>
+        <ScrollView horizontal>
+        {
+          user.interests && user.interests.map((interest, index) => {
+            const onToggle = () => {
+              if (interests.includes(interest)) {
+                setInterests(interests.filter((item) => item !== interest));
+              } else {
+                setInterests([...interests, interest]);
+              }
             }
-          }
 
-          return (
-            <ToggleButton 
-              key={index} 
-              text={interest} 
-              onPress={onToggle}
-              toggled={interests.includes(interest)}
-            />
-          );
-        })
-      }
-      </ScrollView>
+            return (
+              <View>
+                <ToggleButton 
+                  key={index} 
+                  text={interest} 
+                  onPress={onToggle}
+                  toggled={interests.includes(interest)}
+                />
+              </View>
+            );
+          })
+        }
+        </ScrollView>
+      </View>
       <Button title='Filter' onPress={toggleFilter} />
       <ScrollView>
       {
