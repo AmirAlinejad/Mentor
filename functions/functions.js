@@ -47,9 +47,11 @@ const scoreMentor = (mentor, user, useEthnicity) => {
   }
 
   // check if mentor's keywords match user's keywords
-  for (let keyword of user.keywords) {
-    if (mentor.keywords.includes(keyword)) {
-      score += 1;
+  if (user.keywords && mentor.keywords) {
+    for (let keyword of user.keywords) {
+      if (mentor.keywords.includes(keyword)) {
+        score += 1;
+      }
     }
   }
 
