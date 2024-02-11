@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Colors } from "../styles/Colors";
 import CustomText from "./CustomText";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -17,10 +17,16 @@ const ChatCard = ({ navigation, user }) => {
     };
   
     return (
-      <View style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={sendEmail}>
         <View style={styles.cardLayout}>
             <View style={styles.profileItems}>
-                <View style={styles.avatar}></View>
+                <View style={styles.avatar}>
+                {user.profileImage ? (
+                    <Image source={{ uri: user.profileImage }} style={styles.avatarImage} />
+                  ) : (
+                    <Text style={styles.addPhotoText}></Text>
+                  )}
+                </View>
                 <CustomText style={styles.profileText} text={user.userName} font="bold" />
             </View>
         
@@ -28,7 +34,7 @@ const ChatCard = ({ navigation, user }) => {
                 <Ionicons name="chatbubble" size={30} color={Colors.lightPurple} />
             </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   
@@ -38,7 +44,7 @@ const ChatCard = ({ navigation, user }) => {
         padding: 20,
         margin: 10,
         borderRadius: 10,
-        width: '90%',
+        width: '95%',
     },
     cardLayout: {
         flexDirection: 'row',
@@ -63,6 +69,14 @@ const ChatCard = ({ navigation, user }) => {
     button: {
       padding: 10,
       borderRadius: 5,
+    },
+    avatarImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 100, // Ensure the image is round
+    },
+    addPhotoText: {
+        color: '#a9a9a9', // Placeholder text color
     },
   });
   

@@ -12,6 +12,7 @@ import Search from './Search';
 import Request from './Request';
 import { get, ref } from 'firebase/database';
 import { auth, db } from '../backend/FirebaseConfig'; 
+import { getUserID } from '../functions/functions';
 const Tab = createBottomTabNavigator();
 function HomeScreen({ navigation,route }) { 
   const [userStatus, setUserStatus] = useState(null);

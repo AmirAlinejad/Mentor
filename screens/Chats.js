@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
 import Header from '../components/Header';
 import ChatCard from '../components/ChatCard';
+import { Colors } from '../styles/Colors';
 
 const Chats = () => {
   const [users, setUsers] = useState([]);
@@ -88,7 +89,8 @@ const Chats = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
+    padding: 20,
   },
   searchBar: {
     fontSize: 18,
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
   userItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'flex-start',
+    justifyContent:'flex',
     padding: 10,
   },
   userName: {

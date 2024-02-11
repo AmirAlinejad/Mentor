@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, FlatList, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { ref, get, set, remove } from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
@@ -96,6 +96,9 @@ const Request = () => {
 
     // Refresh the request list
     fetchRequests(user.uid);
+
+    // alert
+    Alert.alert('Request accepted');
   };
 
   const handleIgnoreRequest = async (requestId) => {
@@ -115,6 +118,9 @@ const Request = () => {
 
     // Refresh the request list
     fetchRequests(user.uid);
+
+    // alert
+    Alert.alert('Request ignored');
   };
 
   const filterRequests = (query) => {
