@@ -6,7 +6,7 @@ import { db } from '../backend/FirebaseConfig';
 import Header from '../components/Header';
 import RequestCard from '../components/RequestCard';
 
-const Request = () => {
+const Request = ({ navigation }) => {
   const [requestMembers, setRequestMembers] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
