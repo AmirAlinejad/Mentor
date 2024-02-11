@@ -68,6 +68,11 @@ const Search = ({navigation}) => {
     if (useEthnicity && mentor.ethnicity !== user.ethnicity) return false;
     // age
     if (mentor.age < minAge) return false;
+    // interests
+    if (interests.length > 0) {
+      if (!mentor.interests) return false;
+      if (!mentor.interests.some((interest) => interests.includes(interest))) return false;
+    }
 
     return true;
   });
