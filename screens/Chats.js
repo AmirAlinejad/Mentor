@@ -39,7 +39,7 @@ const Chats = () => {
           const relationRef = ref(db, `users/${relationId}`);
           const relationSnapshot = await get(relationRef);
           if (relationSnapshot.exists()) {
-            return { id: relationId, userName: relationSnapshot.val().userName, email: relationSnapshot.val().email };
+            return { id: relationId, userName: relationSnapshot.val().userName, email: relationSnapshot.val().email, photoID:  };
           }
           return null;
         });

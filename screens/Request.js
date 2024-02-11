@@ -43,7 +43,7 @@ const Request = () => {
           const userRef = ref(db, `users/${requestId}`);
           const userSnapshot = await get(userRef);
           if (userSnapshot.exists()) {
-            return { id: requestId, userName: userSnapshot.val().userName, photoURL: userSnapshot.val().photoURL };
+            return { id: requestId, userName: userSnapshot.val().userName, photoURL: userSnapshot.val().profileImg };
           }
           return null;
         });
