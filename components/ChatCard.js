@@ -21,8 +21,8 @@ const ChatCard = ({ navigation, user }) => {
         <View style={styles.cardLayout}>
             <View style={styles.profileItems}>
                 <View style={styles.avatar}>
-                {user.profileImage ? (
-                    <Image source={{ uri: user.profileImage }} style={styles.avatarImage} />
+                {user.photoID ? (
+                    <Image source={{ uri: user.photoID }} style={styles.avatarImage} />
                   ) : (
                     <Text style={styles.addPhotoText}></Text>
                   )}
