@@ -17,10 +17,20 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
     };
   
     return (
-      <View style={styles.card}>
+      <TouchableOpacity style={styles.card}
+         onPress={() => navigation.navigate("Profile", {
+          profileUserID: user.userID,
+        })}
+    >
         <View style={styles.cardLayout}>
             <View style={styles.profileItems}>
-                <View style={styles.avatar}></View>
+                <View style={styles.avatar}>
+                {user.profileImage ? (
+                    <Image source={{ uri: user.profileImage }} style={styles.avatarImage} />
+                  ) : (
+                    <Text style={styles.addPhotoText}></Text>
+                  )}
+                </View>
                 <CustomText style={styles.profileText} text={user.userName} font="bold" />
             </View>
         
@@ -33,7 +43,7 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
                 </TouchableOpacity>
             </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   
@@ -73,6 +83,15 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 15,
+    },
+    avatarImage: {
+        width: '100%',
+        height: '100%',
+    },
+    addPhotoText: {
+        textAlign: 'center',
+        fontSize: 20,
+        color: 'white',
     },
   });
   

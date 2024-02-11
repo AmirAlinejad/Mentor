@@ -7,21 +7,26 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Header from '../../components/Header';
 import CustomText from '../../components/CustomText';
+import { Colors } from '../../styles/Colors';
+import { getUserData, getUserID } from '../../functions/functions';
 
-const fakeUserData = {
-  userName: 'John Doe',
-  age: 25,
-  ethnicity: 'Asian',
-  description: 'I am a software engineer',
-  interests: ['Art', 'Music', 'Sports'],
-};
+const Profile = ({ route, navigation }) => {
+  let profileUserID = getUserID();
 
-const Profile = ({ navigation }) => {
-  const [profileImage, setProfileImage] = useState(null);
+  if (route) {
+    profileUserID = route.params.profileUserID;
+  }
+
+  const [profileImage, setProfileImage] = useState("");
+  const [profileUserData, setProfileUserData] = useState({});
+
   const auth = getAuth();
   const storage = getStorage(); // Ensure Firebase Storage is initialized
 
   useEffect(() => {
+    console.log("Profile user ID:", profileUserID);
+    getUserData(profileUserID, setProfileUserData);
+
     const currentUser = auth.currentUser;
     if (currentUser) {
       const imageRef = ref(db, `users/${currentUser.uid}/profileImage`);
@@ -36,6 +41,7 @@ const Profile = ({ navigation }) => {
         console.error("Error fetching profile image:", error);
       });
     }
+
   }, []);
 
   const handleImageUpload = async () => {
@@ -87,25 +93,43 @@ const Profile = ({ navigation }) => {
     }
   };
 
+  const profileImg = () => (
+    <View style={[styles.avatar, { backgroundColor: profileUserData.profileImage ? 'transparent' : '#f0f0f0' }]}>
+      {profileUserData.profileImage ? (
+        <Image source={{ uri: profileUserData.profileImage }} style={styles.avatarImage} />
+      ) : (
+        <Text style={styles.addPhotoText}></Text>
+      )}
+    </View>
+  )
+
   return (
     <View style={styles.container}>
-      <Header navigation={navigation} text="Profile" back={false} />
+      <Header navigation={navigation} text="Profile" back={profileUserID != getUserID()} />
       <View style={styles.profileData}>
-        <TouchableOpacity onPress={handleImageUpload}>
-          <View style={[styles.avatar, { backgroundColor: profileImage ? 'transparent' : '#f0f0f0' }]}>
-            {profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.avatarImage} />
-            ) : (
-              <Text style={styles.addPhotoText}>Add Profile Picture</Text>
-            )}
-          </View>
-        </TouchableOpacity>
+        {profileUserID === getUserID() ? (
+          <TouchableOpacity onPress={handleImageUpload}>
+            {profileImg()}
+          </TouchableOpacity>) : (
+            <View>
+              {profileImg()}
+            </View>
+          )
+        }
         <View style={styles.infoContainer}>
-          <CustomText style={styles.userName} text={fakeUserData.userName} font="bold" />
-          <CustomText style={styles.description} text={fakeUserData.description} />
-          {fakeUserData.interests.map((interest, index) => (
-            <CustomText key={index} style={styles.interest} text={interest} />
-          ))}
+        {profileUserData && 
+          <View>
+            <CustomText style={styles.userName} text={profileUserData.userName} font="bold" />
+            <CustomText style={styles.description} text={profileUserData.aboutYou} />
+            <View style={{flexDirection: 'row', gap: 20}}>
+            {profileUserData.interests && profileUserData.interests.map((interest, index) => (
+              <View key={index} style={styles.interestChip}>
+                <CustomText key={index} style={styles.interest} text={interest} />
+              </View>
+            ))}
+            </View>
+          </View>
+        }
         </View>
       </View>
     </View>
@@ -116,7 +140,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   profileData: {
     marginTop: 50,
@@ -130,34 +154,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
     backgroundColor: '#f0f0f0', // Placeholder background color
-    },
-    avatarImage: {
+  },
+  avatarImage: {
     width: '100%',
     height: '100%',
     borderRadius: 100, // Ensure the image is round
-    },
-    addPhotoText: {
+  },
+  addPhotoText: {
     color: '#a9a9a9', // Placeholder text color
-    },
-    infoContainer: {
+  },
+  infoContainer: {
     marginTop: 20,
-    },
-    userName: {
+  },
+  userName: {
     textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
-    },
-    description: {
+  },
+  description: {
     textAlign: 'center',
     marginTop: 10,
     fontSize: 16, // Adjusted for readability
-    },
-    interest: {
+    marginBottom: 10,
+  },
+  interest: {
     textAlign: 'center',
     marginTop: 5,
     fontSize: 14, // Adjusted for consistency
-    },
-    });
+  },
+  interestChip: {
+    backgroundColor: Colors.lightPurple,
+    padding: 15,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  });
     
     export default Profile;
 
