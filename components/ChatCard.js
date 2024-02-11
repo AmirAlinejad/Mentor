@@ -8,7 +8,7 @@ import { get, ref, set } from "firebase/database";
 import { db } from "../backend/FirebaseConfig";
 import * as Linking from 'expo-linking';
 
-const RequestCard = ({ navigation, user, ignore, accept }) => {
+const ChatCard = ({ navigation, user }) => {
 
     const sendEmail = async () => {
         Linking.openURL('mailto:' + user.email).catch(error => {
@@ -24,14 +24,9 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
                 <CustomText style={styles.profileText} text={user.userName} font="bold" />
             </View>
         
-            <View style={styles.actions}>
-                <TouchableOpacity onPress={accept}>
-                    <Ionicons name="checkmark-circle" size={40} color={Colors.green} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={ignore}>
-                    <Ionicons name="close-circle" size={40} color={Colors.red} />
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={styles.button} onPress={sendEmail}>
+                <Ionicons name="chatbubble" size={30} color={Colors.lightPurple} />
+            </TouchableOpacity>
         </View>
       </View>
     );
@@ -69,11 +64,6 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
       padding: 10,
       borderRadius: 5,
     },
-    actions: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 15,
-    },
   });
   
-  export default RequestCard;
+  export default ChatCard;

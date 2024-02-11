@@ -5,6 +5,7 @@ import { ref, get } from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
 import Header from '../components/Header';
+import ChatCard from '../components/ChatCard';
 
 const Chats = () => {
   const [users, setUsers] = useState([]);
@@ -37,7 +38,7 @@ const Chats = () => {
           const relationRef = ref(db, `users/${relationId}`);
           const relationSnapshot = await get(relationRef);
           if (relationSnapshot.exists()) {
-            return { id: relationId, userName: relationSnapshot.val().userName };
+            return { id: relationId, userName: relationSnapshot.val().userName, email: relationSnapshot.val().email };
           }
           return null;
         });
@@ -62,19 +63,19 @@ const Chats = () => {
 
   const renderUser = ({ item }) => (
     <View style={styles.userItem}>
-      <Text style={styles.userName}>{item.userName}</Text>
+      <ChatCard user={item} />
     </View>
   );
 
   return (
     <View style={styles.container}>
       <Header text="Chats" />
-      <TextInput
+      {/*<TextInput
         style={styles.searchBar}
         placeholder="Search for a user..."
         value={searchQuery}
         onChangeText={setSearchQuery}
-      />
+      />*/}
       <FlatList
         data={filteredUsers}
         renderItem={renderUser}
@@ -101,10 +102,8 @@ const styles = StyleSheet.create({
   userItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent:'flex-start',
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
   },
   userName: {
     fontSize: 16,

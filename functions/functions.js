@@ -17,19 +17,8 @@ const filterKeywordsOpenAI = async (text) => {
   return completion.choices[0].message.content;
 };
 
-const scoreMentor = (mentor) => {
+const scoreMentor = (mentor, user, useEthnicity) => {
   // create fake user for now
-  user = {
-    city: "Los Angeles",
-    ethnicity: "Asian",
-    state: "CA",
-    interests: ["cooking", "hiking", "gardening"],
-    description: "I am a 20 year old computer science student who loves to cook, hike, and garden." 
-      + "I am outgoing and love to meet new people.",
-    keywords: ["cooking", "hiking", "gardening", "outgoing", "computer science", "student"],
-  };
-
-
   let score = 0;
 
   // check in see if in same city and state
@@ -42,7 +31,7 @@ const scoreMentor = (mentor) => {
   }
 
   // check if mentor ethnicity matches
-  if (mentor.ethnicity == user.ethnicity) {
+  if (useEthnicity && mentor.ethnicity == user.ethnicity) {
     score += 1;
   }
 
@@ -53,12 +42,12 @@ const scoreMentor = (mentor) => {
     }
   }
 
-  // check if mentor's keywords match user's keywords
+  /*// check if mentor's keywords match user's keywords
   for (let keyword of user.keywords) {
     if (mentor.keywords.includes(keyword)) {
       score += 1;
     }
-  }
+  }*/
 
   return score;
 };
