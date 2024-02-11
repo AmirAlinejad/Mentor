@@ -132,6 +132,7 @@ const Request = () => {
 
   const renderRequests = ({ item }) => (
     <RequestCard 
+      navigation={navigation}
       user={item} 
         accept={() => handleAcceptRequest(item.id)} 
         ignore={() => handleIgnoreRequest(item.id)} 
