@@ -1,12 +1,12 @@
 import OpenAI from "openai";
 import { getAuth } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
-import { ref, get } from "firebase/database";
+import { ref, get, update } from "firebase/database";
 
-const openai = new OpenAI({ apiKey: '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'});
+const openai = new OpenAI({ apiKey: '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'});
 const auth = getAuth();
 
-const filterKeywordsOpenAI = async (text) => {
+const filterKeywordsOpenAI = async (text, userID) => {
 
   const completion = await openai.chat.completions.create({
     messages: [{ role: "system", 
@@ -14,7 +14,11 @@ const filterKeywordsOpenAI = async (text) => {
     model: "gpt-3.5-turbo",
   });
 
-  return completion.choices[0].message.content;
+  // set user keywords
+  const userRef = ref(db, `users/${userID}`);
+  await update(userRef, { keywords: completion.choices[0].message.content.split(', ') });
+
+  console.log(completion.choices[0].message.content.split(', '));
 };
 
 const scoreMentor = (mentor, user, useEthnicity) => {
@@ -42,12 +46,12 @@ const scoreMentor = (mentor, user, useEthnicity) => {
     }
   }
 
-  /*// check if mentor's keywords match user's keywords
+  // check if mentor's keywords match user's keywords
   for (let keyword of user.keywords) {
     if (mentor.keywords.includes(keyword)) {
       score += 1;
     }
-  }*/
+  }
 
   return score;
 };

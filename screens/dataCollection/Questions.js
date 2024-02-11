@@ -3,7 +3,7 @@ import { View, Text, TextInput, Alert, Animated, StyleSheet, TouchableOpacity, S
 import { Picker } from '@react-native-picker/picker';
 import { db } from '../../backend/FirebaseConfig';
 import { ref, update } from 'firebase/database';
-import { getUserID, getUserData } from '../../functions/functions';
+import { getUserID, getUserData, filterKeywordsOpenAI } from '../../functions/functions';
 import ToggleButton from '../../components/ToggleButton';
 import Slider from '@react-native-community/slider';
 import * as Progress from 'react-native-progress';
@@ -69,6 +69,8 @@ const Questions = ({ navigation }) => {
   const [userInterests, setInterests] = useState([]);
   const progress = (currentQuestionIndex + 1) / questions.length;
   const [age, setAge] = useState(20);
+  const [keywords, setKeyWords] = useState([]);
+
   const handleSubmit = async () => {
     getUserData(getUserID(), setUserData).then(() => { // Get the user data
 
@@ -88,6 +90,10 @@ const Questions = ({ navigation }) => {
         userAnswer = {
           [questions[currentQuestionIndex].key]: userInterests,
         };
+      }
+
+      if (questions[currentQuestionIndex].key === 'aboutYou') {
+        filterKeywordsOpenAI(answer, getUserID());
       }
 
       // Push the answer to the database
@@ -124,7 +130,9 @@ const Questions = ({ navigation }) => {
         fadeAnim.setValue(1); // Immediately return opacity to 1 for the next question
       } else {
         // Handle the end of questions
+        // add keywords to userData
         Alert.alert("Completed", "You have answered all questions.");
+
         navigation.navigate('HomeScreen'); // Navigate to the home screen
       }
     });
