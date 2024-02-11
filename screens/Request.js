@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    padding: 20,
   },
   searchBar: {
     fontSize: 18,
