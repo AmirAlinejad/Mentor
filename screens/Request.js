@@ -18,7 +18,7 @@ const Request = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         fetchRequests(user.uid);
-        intervalId = setInterval(() => fetchRequests(user.uid), 1000); // Set up the interval
+        intervalId = setInterval(() => fetchRequests(user.uid), 2000); // Set up the interval
       }
     });
   
