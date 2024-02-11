@@ -19,14 +19,14 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
     return (
       <TouchableOpacity style={styles.card}
          onPress={() => navigation.navigate("Profile", {
-          profileUserID: user.userID,
+          profileUserID: user.id,
         })}
     >
         <View style={styles.cardLayout}>
             <View style={styles.profileItems}>
                 <View style={styles.avatar}>
-                {user.profileImage ? (
-                    <Image source={{ uri: user.profileImage }} style={styles.avatarImage} />
+                {user.photoURL ? (
+                    <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
                   ) : (
                     <Text style={styles.addPhotoText}></Text>
                   )}
@@ -68,7 +68,6 @@ const RequestCard = ({ navigation, user, ignore, accept }) => {
         width: 50,
         height: 50,
         borderRadius: 50,
-        backgroundColor: 'gray',
         marginRight: 10,
     },
     profileText: {

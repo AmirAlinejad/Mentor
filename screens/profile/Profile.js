@@ -121,7 +121,7 @@ const Profile = ({ route, navigation }) => {
           <View>
             <CustomText style={styles.userName} text={profileUserData.userName} font="bold" />
             <CustomText style={styles.description} text={profileUserData.aboutYou} />
-            <View style={{flexDirection: 'row', gap: 20}}>
+            <View style={{flexDirection: 'row', gap: 20, justifyContent: 'center'}}>
             {profileUserData.interests && profileUserData.interests.map((interest, index) => (
               <View key={index} style={styles.interestChip}>
                 <CustomText key={index} style={styles.interest} text={interest} />
