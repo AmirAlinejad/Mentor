@@ -98,9 +98,11 @@ const SignIn = ({ navigation }) => {
         secureTextEntry={passwordVisible}
       />
 
-      <Button text="Sign In" onPress={onSignInPressed} bgColor={'#FF5349'} />
+      <Button text="Sign In" onPress={onSignInPressed} bgColor={'#190482'} />
 
-      <Button text="Forgot Password?" onPress={onForgotPasswordPressed} bgColor={'#FFFFFF'} />
+      <TouchableOpacity style={styles.forgotPasswordButton} onPress={onForgotPasswordPressed}>
+        <Text style={styles.forgotPasswordButtonText}>Forgot Password?</Text>
+      </TouchableOpacity>
 
       <Text style={styles.signupText}>Don't have an account?</Text>
       <Text style={styles.signupLink} onPress={onSignUp}>Sign Up</Text>
@@ -119,6 +121,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     marginBottom: 20,
+    marginTop: -80
   },
   title: {
     fontSize: 28,
@@ -132,15 +135,22 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
     borderColor: 'grey',
-    borderRadius: 5,
+    borderRadius: 30,
   },
-  button: {
+  forgotPasswordButton: {
+    marginTop: 10,
+    backgroundColor: 'white',
     width: '80%',
-    padding: 15,
-    marginVertical: 10,
-    alignItems: 'center',
+    padding: 8,
     borderRadius: 5,
+    alignItems: 'center',
   },
+  forgotPasswordButtonText: {
+    fontSize: 16,
+    color: 'black',
+    
+  },
+  
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
@@ -161,7 +171,7 @@ button: {
   backgroundColor: '#FF5349',
   width: '80%',
   padding: 15,
-  borderRadius: 5,
+  borderRadius: 30,
   alignItems: 'center',
 },
 buttonText: {

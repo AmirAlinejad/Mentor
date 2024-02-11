@@ -14,7 +14,7 @@ import Logo from '../../assets/icon.png';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { ref, set } from 'firebase/database';
 import { FIREBASE_AUTH, db } from '../../backend/FirebaseConfig';
-
+import CustomText from '../../components/CustomText';
 // Simplified Input component
 const Input = ({ placeholder, value, setValue, secureTextEntry, keyboardType, onEyeIconPress }) => (
   <TextInput
@@ -38,30 +38,22 @@ const SignUp = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [loading, setLoading] = useState(false);
   const { height } = useWindowDimensions();
   const auth = FIREBASE_AUTH;
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
+ 
 
   const onSignUpPressed = async () => {
     setLoading(true);
 
-    if (!userName || !email || !password || !confirmPassword) {
+    if (!userName || !email || !password) {
       Alert.alert("Error", "Please fill in all fields");
       setLoading(false);
       return;
     }
 
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
-      setLoading(false);
-      return;
-    }
 
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -101,12 +93,12 @@ const SignUp = ({ navigation }) => {
       <Input placeholder="Username" value={userName} setValue={setUserName} />
       <Input placeholder="Email" value={email} setValue={setEmail} keyboardType="email-address" />
       <Input placeholder="Password" value={password} setValue={setPassword} secureTextEntry />
-      <Input placeholder="Confirm Password" value={confirmPassword} setValue={setConfirmPassword} secureTextEntry />
+      
 
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <Button text="Sign Up" onPress={onSignUpPressed} bgColor={'#FF5349'} />
+        <Button text="Sign Up" onPress={onSignUpPressed} bgColor={'#190482'} />
       )}
 
       <Text style={styles.signupText}>Have an account already?</Text>
@@ -126,7 +118,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '60%',
-    marginBottom: 20,
+    marginTop: -100,
   },
   title: {
     fontSize: 28,
@@ -140,14 +132,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
     borderColor: 'grey',
-    borderRadius: 5,
+    borderRadius: 30,
   },
   button: {
     width: '80%',
     padding: 15,
     marginVertical: 10,
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 30,
   },
   buttonText: {
     color: 'white',
