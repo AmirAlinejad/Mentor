@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Alert, Animated, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { db } from '../../backend/FirebaseConfig';
@@ -104,7 +104,15 @@ const Questions = ({ navigation }) => {
       }
     });
   };
-
+  useEffect(() => {
+    const currentOptions = questions[currentQuestionIndex]?.options;
+    if (currentOptions && currentOptions.length > 0) {
+      setAnswer(currentOptions[0]);
+    } else {
+    
+      setAnswer('');
+    }
+  }, [currentQuestionIndex]); 
   const renderInputMethod = () => {
     const currentQuestion = questions[currentQuestionIndex];
     if (currentQuestion.key === 'age') {
