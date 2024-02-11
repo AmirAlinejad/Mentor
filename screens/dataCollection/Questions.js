@@ -73,7 +73,7 @@ const Questions = ({ navigation }) => {
   const handleSubmit = async () => {
     getUserData(getUserID(), setUserData).then(() => { // Get the user data
 
-      if (answer.trim() === '' && questions[currentQuestionIndex].key !== 'interests') {
+      if (answer.trim() === '' && questions[currentQuestionIndex].key !== 'interests' && questions[currentQuestionIndex].key !== 'age') {
         Alert.alert("Error", "Please provide an answer before submitting.");
         return;
       }
