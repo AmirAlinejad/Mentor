@@ -3,7 +3,7 @@ import { getAuth } from 'firebase/auth';
 import { db } from '../backend/FirebaseConfig';
 import { ref, get, update } from "firebase/database";
 
-const openai = new OpenAI({ apiKey: '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'});
+const openai = new OpenAI({ apiKey: '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'});
 const auth = getAuth();
 
 const filterKeywordsOpenAI = async (text, userID) => {
