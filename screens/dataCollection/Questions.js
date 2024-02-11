@@ -14,7 +14,6 @@ const questions = [
   {
     key: 'age',
     question: "How old are you?",
-    options: ['18-24', '25-34', '35-44', '45-54', '55+'],
   },
   {
     key: 'ethnicity',
@@ -89,6 +88,12 @@ const Questions = ({ navigation }) => {
       if (questions[currentQuestionIndex].key === 'interests') {
         userAnswer = {
           [questions[currentQuestionIndex].key]: userInterests,
+        };
+      }
+
+      if (questions[currentQuestionIndex].key === 'age') {
+        userAnswer = {
+          [questions[currentQuestionIndex].key]: age,
         };
       }
 
